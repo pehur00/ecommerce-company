@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniPCWijzer — AI Company Dashboard</title>
+<style>
+/* ── base ── */
+:root {
+  --bg: #0b0f19;
+  --surface: #111827;
+  --surface-2: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #374151;
+  --accent: #3b82f6;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  line-height: 1.45;
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+header {
+  background: linear-gradient(180deg, rgba(17,24,39,.9) 0%, rgba(11,15,25,1) 100%), var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+header h1 { font-size: clamp(1.4rem, 3vw, 2.2rem); letter-spacing: -0.02em; }
+header p { color: var(--muted); margin-top: .35rem; }
+.container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+
+/* ── section headings ── */
+.section-title { font-size: 1.15rem; margin: 1.6rem 0 .7rem; display:flex; align-items:center; gap:.5rem; }
+.section-title::before { content:""; display:inline-block; width:6px; height:22px; border-radius:4px; background:var(--accent); }
+
+/* ── workers ── */
+.workers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+.worker-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.worker-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+.avatar-wrap { width: 64px; height: 64px; margin: 0 auto; position: relative; }
+.avatar-svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 0 transparent); transition: filter .3s ease; }
+.worker-card.pulse .avatar-svg { filter: drop-shadow(0 0 8px var(--accent)); animation: glow 2.2s ease-in-out infinite; }
+@keyframes glow {
+  0%, 100% { filter: drop-shadow(0 0 6px var(--accent)); }
+  50% { filter: drop-shadow(0 0 18px var(--accent)); }
+}
+.bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) scale(.96);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .55rem .7rem;
+  min-width: 160px;
+  max-width: 240px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .2s ease;
+  z-index: 10;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 7px 7px 0;
+  border-style: solid;
+  border-color: var(--border) transparent transparent transparent;
+}
+.worker-card:hover .bubble { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
+.bubble-status { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .2rem; }
+.bubble-text { font-size: .78rem; color: var(--text); line-height: 1.35; }
+.worker-name { font-weight: 600; margin-top: .6rem; font-size: .92rem; }
+.worker-stats { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+
+/* ── kanban ── */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: .8rem;
+  overflow-x: auto;
+}
+.kanban-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+}
+.col-header {
+  padding: .6rem .75rem;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.col-count {
+  background: var(--surface-2);
+  padding: .15rem .45rem;
+  border-radius: 999px;
+  font-size: .72rem;
+}
+.col-body { padding: .6rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+.task-card {
+  background: var(--surface-2);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: .55rem .65rem;
+}
+.task-card.status-ready   { border-left-color: #3b82f6; }
+.task-card.status-running { border-left-color: #f59e0b; }
+.task-card.status-done    { border-left-color: #10b981; }
+.task-card.status-blocked { border-left-color: #ef4444; }
+.task-card.status-archived{ border-left-color: #6b7280; }
+
+.task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .35rem; }
+.task-id { font-size: .65rem; color: var(--muted); font-family: monospace; }
+.badge {
+  font-size: .6rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: .15rem .4rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.status-ready    { background: rgba(59,130,246,.15); color: #60a5fa; }
+.status-running  { background: rgba(245,158,11,.15); color: #fbbf24; }
+.status-done     { background: rgba(16,185,129,.15); color: #34d399; }
+.status-blocked  { background: rgba(239,68,68,.15); color: #f87171; }
+.status-archived { background: rgba(107,114,128,.15); color: #9ca3af; }
+.task-title { font-size: .82rem; font-weight: 600; line-height: 1.3; }
+.task-meta { display: flex; justify-content: space-between; margin-top: .35rem; font-size: .72rem; color: var(--muted); }
+
+/* ── finances ── */
+.finances-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .8rem;
+}
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.stat-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.stat-value { font-size: 1.6rem; font-weight: 800; margin-top: .25rem; letter-spacing: -0.02em; }
+.stat-value.pos { color: #34d399; }
+.stat-value.neg { color: #f87171; }
+.stat-value.neu { color: #e5e7eb; }
+
+/* ── company info ── */
+.company-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+}
+.company-card h3 { font-size: 1.05rem; margin-bottom: .4rem; }
+.company-card p { color: var(--muted); font-size: .88rem; }
+.company-meta { display: flex; gap: 1.2rem; margin-top: .6rem; flex-wrap: wrap; }
+.company-meta span { font-size: .82rem; color: var(--muted); }
+.company-meta strong { color: var(--text); }
+
+/* ── footer ── */
+footer { text-align:center; color: var(--muted); font-size:.75rem; margin-top:2rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🛠 MiniPCWijzer — AI Company Dashboard</h1>
+  <p>Live AI workforce &amp; kanban metrics for the ecommerce squad</p>
+</header>
+
+<div class="container">
+
+  <h2 class="section-title">AI Workforce</h2>
+  <div class="workers-grid" id="workers">
+    
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#00C853">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#00C853"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#00C853"></rect><circle cx="26" cy="16" r="2" fill="#fff"></circle><circle cx="38" cy="16" r="2" fill="#fff"></circle></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">done</div>
+        <div class="bubble-text">Amazon.nl Partner Program — account + API setup</div>
+      </div>
+      <div class="worker-name">Ops</div>
+      <div class="worker-stats">0 active / 3 total</div>
+    </div>
+        
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#AA00FF">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#AA00FF"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#AA00FF"></rect><rect x="22" y="14" width="8" height="4" rx="2" fill="#fff"></rect><rect x="34" y="14" width="8" height="4" rx="2" fill="#fff"></rect></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">done</div>
+        <div class="bubble-text">SEO-artikel 1: Beste mini pc 2026 — koopgids</div>
+      </div>
+      <div class="worker-name">Researcher</div>
+      <div class="worker-stats">0 active / 3 total</div>
+    </div>
+        
+    <div class="worker-card pulse">
+      <div class="avatar-wrap" style="--accent:#2962FF">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#2962FF"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#2962FF"></rect><text x="32" y="22" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">&lt;/&gt;</text><rect x="20" y="36" width="24" height="12" rx="2" fill="rgba(0,0,0,0.3)"></rect></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">done</div>
+        <div class="bubble-text">Prijs-scraper — Bol.com + Amazon.nl</div>
+      </div>
+      <div class="worker-name">Developer</div>
+      <div class="worker-stats">1 active / 3 total</div>
+    </div>
+        
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#FFD600">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#FFD600"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#FFD600"></rect><circle cx="32" cy="18" r="4" fill="none" stroke="#fff" stroke-width="2"></circle><path d="M36 22 L42 28" stroke="#fff" stroke-width="2" stroke-linecap="round"></path></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">idle</div>
+        <div class="bubble-text">Idle</div>
+      </div>
+      <div class="worker-name">Reviewer</div>
+      <div class="worker-stats">0 active / 0 total</div>
+    </div>
+        
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#FF6D00">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#FF6D00"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#FF6D00"></rect><rect x="24" y="12" width="16" height="3" rx="1.5" fill="#fff"></rect><rect x="26" y="18" width="12" height="2" rx="1" fill="#fff"></rect></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">idle</div>
+        <div class="bubble-text">Idle</div>
+      </div>
+      <div class="worker-name">PM</div>
+      <div class="worker-stats">0 active / 0 total</div>
+    </div>
+        
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#DD2C00">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#DD2C00"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#DD2C00"></rect><rect x="22" y="38" width="4" height="10" rx="1" fill="#fff"></rect><rect x="30" y="34" width="4" height="14" rx="1" fill="#fff"></rect><rect x="38" y="30" width="4" height="18" rx="1" fill="#fff"></rect></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">idle</div>
+        <div class="bubble-text">Idle</div>
+      </div>
+      <div class="worker-name">Data</div>
+      <div class="worker-stats">0 active / 0 total</div>
+    </div>
+        
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#FF4081">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#FF4081"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#FF4081"></rect><circle cx="24" cy="16" r="2" fill="#fff"></circle><circle cx="40" cy="16" r="2" fill="#fff"></circle><path d="M26 24 Q32 28 38 24" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">idle</div>
+        <div class="bubble-text">Idle</div>
+      </div>
+      <div class="worker-name">Designer</div>
+      <div class="worker-stats">0 active / 0 total</div>
+    </div>
+        
+    <div class="worker-card ">
+      <div class="avatar-wrap" style="--accent:#9E9E9E">
+        <svg viewBox="0 0 64 64" class="avatar-svg"><circle cx="32" cy="20" r="12" fill="#9E9E9E"></circle><rect x="18" y="30" width="28" height="24" rx="6" fill="#9E9E9E"></rect><path d="M28 16 L32 20 L38 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div class="bubble">
+        <div class="bubble-status">idle</div>
+        <div class="bubble-text">Idle</div>
+      </div>
+      <div class="worker-name">Security</div>
+      <div class="worker-stats">0 active / 0 total</div>
+    </div>
+        
+  </div>
+
+  <h2 class="section-title">Kanban Board</h2>
+  <div class="kanban-board" id="kanban">
+    
+    <div class="kanban-col">
+      <h3 class="col-header">READY <span class="col-count">0</span></h3>
+      <div class="col-body">
+        
+      </div>
+    </div>
+        
+    <div class="kanban-col">
+      <h3 class="col-header">RUNNING <span class="col-count">1</span></h3>
+      <div class="col-body">
+        
+    <div class="task-card status-running">
+      <div class="task-header">
+        <span class="task-id">t_fe2ce288</span>
+        <span class="badge status-running">RUNNING</span>
+      </div>
+      <div class="task-title">AI Company Dashboard bouwen</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-developer</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+      </div>
+    </div>
+        
+    <div class="kanban-col">
+      <h3 class="col-header">DONE <span class="col-count">8</span></h3>
+      <div class="col-body">
+        
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_e5b519d1</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">Amazon.nl Partner Program — account + API setup</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-ops</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_9772970d</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">Bol.com Partner Program — account + API setup</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-ops</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_0a93bba1</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">SEO-artikel 1: Beste mini pc 2026 — koopgids</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-researcher</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_fa5c0d9c</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">SEO-artikel 2: Mini pc voor home lab — gids</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-researcher</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_2270b534</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">SEO-artikel 3: Mini pc vs desktop — vergelijking</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-researcher</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_4eca7d90</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">Google Search Console + Analytics setup</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-ops</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_94405275</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">Prijs-scraper — Bol.com + Amazon.nl</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-developer</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+    <div class="task-card status-done">
+      <div class="task-header">
+        <span class="task-id">t_ba907e3a</span>
+        <span class="badge status-done">DONE</span>
+      </div>
+      <div class="task-title">Email nieuwsbrief template + lead capture</div>
+      <div class="task-meta">
+        <span class="task-assignee">👤 worker-developer</span>
+        <span class="task-priority">⭐ 0</span>
+      </div>
+    </div>
+    
+      </div>
+    </div>
+        
+    <div class="kanban-col">
+      <h3 class="col-header">BLOCKED <span class="col-count">0</span></h3>
+      <div class="col-body">
+        
+      </div>
+    </div>
+        
+    <div class="kanban-col">
+      <h3 class="col-header">ARCHIVED <span class="col-count">0</span></h3>
+      <div class="col-body">
+        
+      </div>
+    </div>
+        
+  </div>
+
+  <h2 class="section-title">Financials</h2>
+  <div class="finances-grid" id="finances">
+    <div class="stat-box">
+      <div class="stat-label">Revenue</div>
+      <div class="stat-value neu">€12,450.00</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Expenses</div>
+      <div class="stat-value neg">€3,870.00</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Profit</div>
+      <div class="stat-value pos">€8,580.00</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Tasks Completed</div>
+      <div class="stat-value neu">8 / 9</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Company Info</h2>
+  <div class="company-card">
+    <h3>MiniPCWijzer B.V.</h3>
+    <p>Empowering Dutch consumers with data-driven mini PC recommendations. Powered by an autonomous AI workforce.</p>
+    <div class="company-meta">
+      <span>👥 <strong>8</strong> AI workers</span>
+      <span>📦 <strong>9</strong> total tasks</span>
+      <span>🚀 <strong>2</strong> partner programs</span>
+      <span>🌐 <strong>NL</strong> market</span>
+    </div>
+  </div>
+
+  <footer>Generated "May 2026" · Refreshed on load via embedded kanban snapshot.</footer>
+</div>
+
+<script>
+const KANBAN_SNAPSHOT = [{"id": "t_e5b519d1", "title": "Amazon.nl Partner Program — account + API setup", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-ops", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_e5b519d1", "created_by": "user", "created_at": 1779041942, "started_at": 1779041958, "completed_at": 1779042435, "result": null, "skills": [], "max_retries": null}, {"id": "t_9772970d", "title": "Bol.com Partner Program — account + API setup", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-ops", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_9772970d", "created_by": "user", "created_at": 1779041942, "started_at": 1779041958, "completed_at": 1779042288, "result": null, "skills": [], "max_retries": null}, {"id": "t_0a93bba1", "title": "SEO-artikel 1: Beste mini pc 2026 — koopgids", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-researcher", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_0a93bba1", "created_by": "user", "created_at": 1779041942, "started_at": 1779041958, "completed_at": 1779042408, "result": "Newsletter template and lead capture form completed", "skills": [], "max_retries": null}, {"id": "t_fa5c0d9c", "title": "SEO-artikel 2: Mini pc voor home lab — gids", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-researcher", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_fa5c0d9c", "created_by": "user", "created_at": 1779041943, "started_at": 1779041958, "completed_at": 1779042526, "result": null, "skills": [], "max_retries": null}, {"id": "t_2270b534", "title": "SEO-artikel 3: Mini pc vs desktop — vergelijking", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-researcher", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_2270b534", "created_by": "user", "created_at": 1779041943, "started_at": 1779041958, "completed_at": 1779042162, "result": null, "skills": [], "max_retries": null}, {"id": "t_4eca7d90", "title": "Google Search Console + Analytics setup", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-ops", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_4eca7d90", "created_by": "user", "created_at": 1779041943, "started_at": 1779042000, "completed_at": 1779042426, "result": null, "skills": [], "max_retries": null}, {"id": "t_94405275", "title": "Prijs-scraper — Bol.com + Amazon.nl", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-developer", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_94405275", "created_by": "user", "created_at": 1779041944, "started_at": 1779042000, "completed_at": 1779042398, "result": null, "skills": [], "max_retries": null}, {"id": "t_ba907e3a", "title": "Email nieuwsbrief template + lead capture", "body": "$(cat /tmp/kanban_task_body.txt)", "assignee": "worker-developer", "status": "done", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_ba907e3a", "created_by": "user", "created_at": 1779041944, "started_at": 1779042000, "completed_at": 1779042174, "result": null, "skills": [], "max_retries": null}, {"id": "t_fe2ce288", "title": "AI Company Dashboard bouwen", "body": "## Doel\nBouw een publiek toegankelijk AI Company Dashboard voor het e-commerce bedrijf.\n\n## Wat het moet tonen\n1. **Werknemers-overzicht** — Visuele poppetjes/avatars per worker profile (worker-ops, worker-researcher, worker-developer, worker-reviewer, worker-pm, worker-data, worker-designer, security)\n2. **Status ballonnetjes** — Elk poppetje met een ballonnetje (speech bubble) die toont waar de worker momenteel mee bezig is (taak titel + status)\n3. **Kanban board overzicht** — Live data uit `hermes kanban --board ecommerce list --json`\n4. **Financieel overzicht** — Uitgaven vs inkomsten sectie (initieel seed data, later live)\n5. **Bedrijfsinfo** — Bedrijfsnaam, missie, aantal werknemers, projecten\n\n## Technisch\n- Statische HTML/CSS/JS (geen backend nodig)\n- Data refresh via JavaScript die een JSON endpoint oproept\n- OF: Python build script dat genereert uit kanban data\n- Opslaan naar: /home/hermes/projects/ecommerce-company/dashboard/index.html\n- Deploy naar aparte GitHub repo: pehur00/ecommerce-company (GitHub Pages)\n\n## Visueel stijl\n- Donkere theme (match MiniPCWijzer stijl)\n- Elke worker heeft een unieke avatar (emoji of SVG poppetje)\n- Kleur per worker type:\n  - worker-ops: 🟢 groen\n  - worker-researcher: 🟣 paars\n  - worker-developer: 🔵 blauw\n  - worker-reviewer: 🟡 geel\n  - worker-pm: 🟠 oranje\n  - worker-data: 🔴 rood\n  - worker-designer: 🩷 roze\n  - security: ⚫ zwart\n- Speech bubbles met CSS (::after pseudo-element)\n- Animatie: subtiele pulse/glow op actieve workers\n- Responsive (mobile-first)\n\n## Build script\nMaak ook een Python build script:\n/home/hermes/projects/ecommerce-company/scripts/build_dashboard.py\nDit script:\n1. Roept `hermes kanban --board ecommerce list --json` aan\n2. Parset de JSON\n3. Genereert index.html met alle data\n4. Kan via cron job draaien voor live updates\n\n## Deliverables\n- /home/hermes/projects/ecommerce-company/dashboard/index.html\n- /home/hermes/projects/ecommerce-company/scripts/build_dashboard.py\n- GitHub repo: pehur00/ecommerce-company\n- GitHub Pages live\n\n## Verificatie\n- test -f dashboard/index.html\n- test -f scripts/build_dashboard.py\n- python scripts/build_dashboard.py → exit code 0\n- GitHub Pages live op https://pehur00.github.io/ecommerce-company/", "assignee": "worker-developer", "status": "running", "priority": 0, "tenant": null, "workspace_kind": "scratch", "workspace_path": "/home/hermes/.hermes/kanban/boards/ecommerce/workspaces/t_fe2ce288", "created_by": "user", "created_at": 1779047017, "started_at": 1779047047, "completed_at": null, "result": null, "skills": [], "max_retries": null}];
+
+/* Attempt to fetch newer JSON from a sibling file (useful if updated externally) */
+fetch('kanban_tasks.json', {cache: 'no-store'})
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(data => { console.log('Live kanban data loaded', data.length); })
+  .catch(() => { console.log('Using embedded kanban snapshot'); });
+</script>
+</body>
+</html>
