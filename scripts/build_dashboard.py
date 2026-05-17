@@ -23,12 +23,12 @@ WORKERS = {
 
 FINANCIALS = {
     "expenses": [
-        {"item":"GitHub Pro","amount":4.00,"period":"maand","category":"tools"},
-        {"item":"VPS Hosting","amount":15.00,"period":"maand","category":"infra"},
-        {"item":"Domain (.nl)","amount":10.00,"period":"jaar","category":"infra"},
+        {"item":"Hetzner VPS CX11","amount":2.99,"period":"maand","category":"infra"},
+        {"item":"Domain .nl (Mijndomein)","amount":8.50,"period":"jaar","category":"infra"},
+        {"item":"GitHub Free","amount":0.00,"period":"gratis","category":"tools"},
         {"item":"Amazon.nl Partner","amount":0.00,"period":"gratis","category":"marketing"},
         {"item":"Bol.com Partner","amount":0.00,"period":"gratis","category":"marketing"},
-        {"item":"MailerLite","amount":0.00,"period":"gratis","category":"marketing"},
+        {"item":"MailerLite Free","amount":0.00,"period":"gratis","category":"marketing"},
     ],
     "revenue": [
         {"item":"Amazon.nl Affiliate","amount":0.00,"period":"maand","category":"affiliate"},
