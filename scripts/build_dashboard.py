@@ -23,8 +23,8 @@ WORKERS = {
 
 FINANCIALS = {
     "expenses": [
-        {"item":"Hetzner VPS CX11","amount":2.99,"period":"maand","category":"infra"},
-        {"item":"Domain .nl (Mijndomein)","amount":8.50,"period":"jaar","category":"infra"},
+        {"item":"Hetzner VPS (CX23)","amount":4.83,"period":"maand","category":"infra","note":"x86, 2 cores, 4 GB RAM, 40 GB disk, shared CPU, fsn1 — echte API-prijs incl. btw"},
+        {"item":"Domain .nl (TransIP)","amount":0.49,"period":"jaar","category":"infra","note":"promotieprijs 1e jaar; vervolg €8,99/jaar"},
         {"item":"GitHub Free","amount":0.00,"period":"gratis","category":"tools"},
         {"item":"Amazon.nl Partner","amount":0.00,"period":"gratis","category":"marketing"},
         {"item":"Bol.com Partner","amount":0.00,"period":"gratis","category":"marketing"},
