@@ -5,7 +5,7 @@ Build script for AI Company Dashboard v4.
 """
 
 import subprocess, json, os, sys
-import html
+import html, re
 from datetime import datetime
 
 DASHBOARD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -108,6 +108,10 @@ DECISION_KEYWORDS = ["director","directie","signoff",
                      "management","memo","recommendation","decision","keuring",
                      "sign off","jasper signoff"]
 
+def _has_kw(text: str, kw: str):
+    """Word-boundary aware keyword match: won't match inside larger words (e.g. keuring vs goedkeuring)."""
+    return re.search(r"(?<!\w)" + re.escape(kw) + r"(?!\w)", text, re.IGNORECASE) is not None
+
 def get_categorized_tasks(tasks):
     human = []
     decision = []
@@ -118,8 +122,8 @@ def get_categorized_tasks(tasks):
         title = (t.get("title") or "").lower()
         body  = (t.get("body")  or "").lower()
         text = title + " " + body
-        has_decision = any(k in text for k in DECISION_KEYWORDS)
-        has_human = status == "blocked" or any(k in text for k in HUMAN_KEYWORDS)
+        has_decision = any(_has_kw(text, k) for k in DECISION_KEYWORDS)
+        has_human = status == "blocked" or any(_has_kw(text, k) for k in HUMAN_KEYWORDS)
         # Decision takes priority only when explicit director/approval keyword is present;
         # otherwise blocked tasks default to human-in-the-loop
         if has_decision:
