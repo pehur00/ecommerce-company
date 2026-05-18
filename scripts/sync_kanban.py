@@ -413,8 +413,14 @@ def write_outputs(payload: dict, public_dir: Path):
         json.dump(payload, f, indent=2, ensure_ascii=False, default=str)
 
     out_html = public_dir / "index.html"
-    with open(out_html, "w") as f:
-        f.write(generate_live_html())
+    # v4: prefer 2D top-down office dashboard if available (built by build_dashboard.py)
+    v4_path = Path(__file__).resolve().parent.parent / "docs" / "index.html"
+    if v4_path.exists() and v4_path.stat().st_size > 30000:
+        import shutil
+        shutil.copy2(v4_path, out_html)
+    else:
+        with open(out_html, "w") as f:
+            f.write(generate_live_html())
 
     return out_json, out_json2, out_html
 
