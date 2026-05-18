@@ -1,0 +1,75 @@
+# Redactor configuratie voor ecommerce kanban sync
+# Patroon: field → actie (drop | redact | truncate | allow)
+# Bij redact: regex match → vervang door repl string
+
+# ── Velden die ALTIJD verwijderd worden uit publieke payload ──
+always_drop:
+  - body
+  - workspace_path
+  - comments
+  - events
+  - latest_summary
+  - children         # takenstructuur is intern
+  - parents
+  - result           # kanban_complete summaries kunnen interne info bevatten
+  - tenant           # namespace leakage
+  - created_by       # operator identity
+  - workspace_kind   # infrastructure leakage
+  - current_run_id   # internal run tracking
+  - runs             # run history with errors/summaries
+  - error            # error details
+  - summary          # free-form summaries
+
+# ── Velden die ALTIJD toegestaan zijn (geen extra checks) ──
+allow:
+  - id
+  - title            # wordt wel ge-scand op secrets
+  - assignee
+  - status
+  - priority
+  - created_at
+  - started_at
+  - completed_at
+  - parent_ids       # takenstructuur is publiek nuttig
+  - child_ids
+
+# ── Regex patronen voor redactie (toegepast op title, result) ──
+patterns:
+  - name: infrastructure_keywords
+    regex: (?i)(\bHetzner\b|\becommerce-prod-01\b|\bVPS\b|\bssh\b|\broot\b)
+    repl: "[REDACTED]"
+    fields: [title]
+
+  - name: absolute_paths
+    regex: (?i)/home/[a-z0-9_/-]+|/var/[a-z0-9_/-]+|/opt/[a-z0-9_/-]+|/tmp/[a-z0-9_.-]+
+    repl: "[REDACTED_PATH]"
+    fields: [title, result]
+
+  - name: ipv4
+    regex: \b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b
+    repl: "[REDACTED_IP]"
+    fields: [title, result]
+
+  - name: secret_keywords
+    regex: (?i)(api[_-]?key|secret|token|password|passphrase|private[_-]?key|ssh[_-]?key|bearer)
+    repl: "[REDACTED_SECRET]"
+    fields: [title, result]
+
+  - name: email
+    regex: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    repl: "[REDACTED_EMAIL]"
+    fields: [title, result]
+
+  - name: internal_urls
+    regex: (?i)(?:http|https|ftp)://(?:localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+)[^\\s]*
+    repl: "[REDACTED_URL]"
+    fields: [title, result]
+
+# ── Lengte limieten ──
+truncate:
+  title: 100
+  result: 280
+
+# ── Fallback body placeholder ──
+# Als body een placeholder bevat (bijv. $(cat ...) of leeg is),
+# vervang door een lege string in publieke payload (body wordt toch gedropt).
