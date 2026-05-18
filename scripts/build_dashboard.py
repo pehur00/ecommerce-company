@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Build script for AI Company Dashboard v3.
+Build script for AI Company Dashboard v4.
 2D top-down office view with walking characters, desks, coffee corner, meeting room.
 """
 
 import subprocess, json, os, sys
+import html
 from datetime import datetime
 
 DASHBOARD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -62,8 +63,11 @@ DESK_POSITIONS = {
 
 # Other locations
 COFFEE_CORNER = {"x": 8,  "y": 18, "label": "☕ Koffiecorner"}
-MEETING_ROOM  = {"x": 72, "y": 18, "label": "🤝 Meeting Room"}
+DIRECTIE_ROOM  = {"x": 72, "y": 18, "label": "👔 Directie"}
 DOOR          = {"x": 45, "y": 90, "label": "🚪 Ingang"}
+
+# Human desk
+HUMAN_DESK = {"x": 64, "y": 58, "label": "🧑‍💼 Human"}
 
 # Spawn points (outside the door)
 SPAWN = {"x": 45, "y": 97}
@@ -92,6 +96,39 @@ def get_worker_status(tasks):
     return ws
 
 
+# Human keywords: tasks requiring human/Jasper action, accounts, credentials, blocked items
+HUMAN_KEYWORDS = ["human","account","credentials","api key","jasper","action required",
+                  "manually","handmatig","wacht op","waiting for","user input",
+                  "can not","cannot","can't","unable to","login",
+                  "auth","permission","oauth","affiliate","verify","verification"]
+
+# Director/Decision keywords ONLY: explicit director-level approval/sign-off items
+DECISION_KEYWORDS = ["director","directie","signoff",
+                     "go-live","go live","budget","brand","domain","go/no-go",
+                     "management","memo","recommendation","decision","keuring",
+                     "sign off","jasper signoff"]
+
+def get_categorized_tasks(tasks):
+    human = []
+    decision = []
+    for t in tasks:
+        status = t.get("status","")
+        if status in ("done", "archived"):
+            continue
+        title = (t.get("title") or "").lower()
+        body  = (t.get("body")  or "").lower()
+        text = title + " " + body
+        has_decision = any(k in text for k in DECISION_KEYWORDS)
+        has_human = status == "blocked" or any(k in text for k in HUMAN_KEYWORDS)
+        # Decision takes priority only when explicit director/approval keyword is present;
+        # otherwise blocked tasks default to human-in-the-loop
+        if has_decision:
+            decision.append({"id": t["id"], "title": t["title"], "status": status})
+        elif has_human:
+            human.append({"id": t["id"], "title": t["title"], "status": status})
+    return human, decision
+
+
 def calc_financials():
     me = sum(e["amount"] for e in FINANCIALS["expenses"] if e["period"]=="maand")
     me += sum(e["amount"]/12 for e in FINANCIALS["expenses"] if e["period"]=="jaar")
@@ -99,12 +136,15 @@ def calc_financials():
     return me, mr
 
 
-def generate_html(tasks, worker_status):
+def generate_html(tasks, worker_status, human_tasks, decision_tasks):
+    def esc(value):
+        return html.escape(str(value or ""), quote=True)
+
     now = datetime.now().strftime("%d-%m-%Y %H:%M")
     monthly_exp, monthly_rev = calc_financials()
     profit = monthly_rev - monthly_exp
     done_c  = sum(1 for t in tasks if t.get("status")=="done")
-    run_c   = sum(1 for t in tasks if t.get("status")=="ready")
+    run_c   = sum(1 for t in tasks if t.get("status")=="running")
     ready_c = sum(1 for t in tasks if t.get("status")=="ready")
     tot_c   = len(tasks)
 
@@ -127,7 +167,7 @@ def generate_html(tasks, worker_status):
     for t in tasks:
         s = t.get("status",""); a = t.get("assignee","?")
         wi2 = WORKERS.get(a, {"emoji":"🤖"})
-        kc += f'<div class="kc-card {s}"><div class="kc-title">{wi2["emoji"]} {t.get("title","")}</div><div class="kc-meta">{a} · {s}</div></div>'
+        kc += f'<div class="kc-card {esc(s)}"><div class="kc-title">{esc(wi2["emoji"])} {esc(t.get("title",""))}</div><div class="kc-meta">{esc(a)} · {esc(s)}</div></div>'
     if not kc: kc = '<div class="kc-card"><div class="kc-title">Geen taken</div></div>'
 
     # Activity
@@ -139,17 +179,41 @@ def generate_html(tasks, worker_status):
         ca = t.get("completed_at","")
         try: ts = datetime.fromtimestamp(int(ca)).strftime("%d/%m %H:%M") if ca else "recent"
         except: ts = "recent"
-        ah += f'<div class="act-item"><span class="act-emoji">{wi2["emoji"]}</span><span class="act-text"><b>{wi2["name"]}</b> — {title}</span><span class="act-time">{ts}</span></div>'
+        ah += f'<div class="act-item"><span class="act-emoji">{esc(wi2["emoji"])}</span><span class="act-text"><b>{esc(wi2["name"])}</b> — {esc(title)}</span><span class="act-time">{esc(ts)}</span></div>'
     if not ah: ah = '<div class="act-item"><span class="act-text">Nog geen activiteit</span></div>'
 
     # Financials
     eh = ""
     for e in FINANCIALS["expenses"]:
         m = e["amount"] if e["period"]=="maand" else e["amount"]/12
-        eh += f'<div class="fin-row"><span>{e["item"]}</span><span class="fin-amt">€{m:.2f}/{e["period"]}</span></div>'
+        eh += f'<div class="fin-row"><span>{esc(e["item"])}</span><span class="fin-amt">€{m:.2f}/{esc(e["period"])}</span></div>'
     rh = ""
     for r in FINANCIALS["revenue"]:
-        rh += f'<div class="fin-row"><span>{r["item"]}</span><span class="fin-amt pos">€{r["amount"]:.2f}/{r["period"]}</span></div>'
+        rh += f'<div class="fin-row"><span>{esc(r["item"])}</span><span class="fin-amt pos">€{r["amount"]:.2f}/{esc(r["period"])}</span></div>'
+
+    # Human in the Loop panel
+    if human_tasks:
+        human_html = ""
+        for ht in human_tasks[:8]:
+            human_html += f'<div class="act-item"><span class="act-emoji">🧑‍💼</span><span class="act-text"><b>{esc(ht["id"])}</b> — {esc(ht["title"])}</span><span class="act-time">{esc(ht["status"])}</span></div>'
+    else:
+        human_html = '<div class="act-item"><span class="act-text" style="color:var(--muted)">Geen open menselijke acties</span></div>'
+
+    # Decision / Approval Board panel
+    if decision_tasks:
+        decision_html = ""
+        for dt2 in decision_tasks[:8]:
+            decision_html += f'<div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>{esc(dt2["id"])}</b> — {esc(dt2["title"])}</span><span class="act-time">{esc(dt2["status"])}</span></div>'
+    else:
+        decision_html = '<div class="act-item"><span class="act-text" style="color:var(--muted)">Geen open directiebesluiten</span></div>'
+
+    # Floating mini cards inside office
+    human_float = ""
+    for i, ht in enumerate(human_tasks[:3]):
+        human_float += f'<div class="floating-card" style="left:{HUMAN_DESK["x"]}%;top:{HUMAN_DESK["y"] - 10 - i*6}%">{esc(ht["title"][:30])}</div>'
+    decision_float = ""
+    for i, dt2 in enumerate(decision_tasks[:3]):
+        decision_float += f'<div class="floating-card decision-float" style="right:5%;top:{DIRECTIE_ROOM["y"] + 18 + i*6}%">{esc(dt2["title"][:30])}</div>'
 
     return f'''<!DOCTYPE html>
 <html lang="nl">
@@ -231,7 +295,7 @@ a{{color:inherit}}
   background:rgba(120,53,15,.25);border:2px solid rgba(120,53,15,.4);
   color:#fbbf24;
 }}
-.meeting-room{{
+.directie-room{{
   right:5%;top:15%;width:22%;height:16%;
   background:rgba(30,58,95,.4);border:2px solid rgba(30,58,95,.6);
   color:#60a5fa;
@@ -249,6 +313,42 @@ a{{color:inherit}}
 .desk::after{{
   content:attr(data-label);
   font-size:8px;font-weight:600;letter-spacing:.02em;
+}}
+
+/* Human Desk */
+.human-desk{{
+  position:absolute;
+  width:10%;height:8%;
+  background:rgba(5,150,105,.35);border:2px solid rgba(52,211,153,.5);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#a7f3d0;
+  z-index:2;
+}}
+.human-desk::after{{
+  content:attr(data-label);
+  font-size:8px;font-weight:600;letter-spacing:.02em;
+}}
+
+/* Floating cards */
+.floating-card{{
+  position:absolute;z-index:4;
+  background:rgba(15,23,42,.85);border:1px solid var(--line);
+  border-radius:6px;padding:4px 7px;font-size:9px;color:var(--text);
+  max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  pointer-events:none;
+}}
+.decision-float{{border-color:rgba(96,165,250,.4);}}
+
+/* Panel colors */
+.panel-human{{border-color:rgba(52,211,153,.25)}}
+.panel-decision{{border-color:rgba(96,165,250,.25)}}
+.pt-human{{color:#34d399}}
+.pt-decision{{color:#60a5fa}}
+.panel-badge{{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:22px;height:20px;border-radius:999px;padding:0 6px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  font-size:11px;margin-left:auto;
 }}
 
 /* ── Door ── */
@@ -418,8 +518,8 @@ footer{{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line
     <!-- Coffee Corner -->
     <div class="room coffee-room">☕<br>Koffiecorner</div>
 
-    <!-- Meeting Room -->
-    <div class="room meeting-room">🤝<br>Meeting<br>Room</div>
+    <!-- Directie Room -->
+    <div class="room directie-room">👔<br>Directie<br>kamer</div>
 
     <!-- Desks -->
     <div class="desk" id="desk-1" data-label="Ops"     style="left:8%;top:38%"></div>
@@ -430,6 +530,13 @@ footer{{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line
     <div class="desk" id="desk-6" data-label="Data"     style="left:22%;top:58%"></div>
     <div class="desk" id="desk-7" data-label="Design"   style="left:36%;top:58%"></div>
     <div class="desk" id="desk-8" data-label="Security" style="left:50%;top:58%"></div>
+
+    <!-- Human Desk -->
+    <div class="human-desk" data-label="🧑‍💼 Human" style="left:64%;top:58%"></div>
+
+    <!-- Floating mini cards -->
+    {human_float}
+    {decision_float}
 
     <!-- Door -->
     <div class="door">🚪 Ingang</div>
@@ -456,15 +563,35 @@ footer{{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line
   </div>
 </div>
 
+<div class="two-col">
+  <div class="panel panel-human">
+    <div class="pt pt-human">🧑‍💼 Human in the Loop <span class="panel-badge">{len(human_tasks)}</span></div>
+    {human_html}
+  </div>
+  <div class="panel panel-decision">
+    <div class="pt pt-decision">👔 Decision / Approval Board <span class="panel-badge">{len(decision_tasks)}</span></div>
+    {decision_html}
+  </div>
+</div>
+
 <div class="pt" style="margin-bottom:10px">📌 Kanban Board</div>
 <div class="kanban">{kc}</div>
 
-<footer>AI Company Dashboard v3 · 2D Top-Down Office · Laatste build: {now} · <a href="https://github.com/pehur00/ecommerce-company" style="color:var(--brand2)">GitHub</a></footer>
+<footer>AI Company Dashboard v4 · 2D Top-Down Office · Laatste build: {now} · <a href="https://github.com/pehur00/ecommerce-company" style="color:var(--brand2)">GitHub</a></footer>
 </div>
 
 <script>
 const workers = {workers_json};
 const office = document.getElementById('office');
+const COFFEE_CORNER = {{ x: 14, y: 23 }};
+const MEETING_ROOM = {{ x: 81, y: 23 }};
+const DIRECTIE_ROOM = {{ x: 72, y: 23 }};
+
+function escapeHtml(value) {{
+  return String(value ?? '').replace(/[&<>'"]/g, ch => ({{
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }}[ch]));
+}}
 
 // Create worker DOM
 workers.forEach(w => {{
@@ -480,7 +607,7 @@ workers.forEach(w => {{
       <div class="char-dir"></div>
     </div>
     <div class="sdot ${{w.status}}"></div>
-    <div class="speech">${{w.task.length > 45 ? w.task.substring(0,42) + '...' : w.task}}</div>
+    <div class="speech">${{escapeHtml(w.task.length > 45 ? w.task.substring(0,42) + '...' : w.task)}}</div>
   `;
   office.appendChild(el);
 }});
@@ -511,16 +638,13 @@ function getWaypoints(fromX, fromY, toX, toY, worker) {{
   if (Math.random() < 0.3 && fromY > 25) {{
     pts.push({{ x: COFFEE_CORNER.x, y: COFFEE_CORNER.y, label: 'coffee' }});
   }}
-  // 15% chance to detour via meeting room
+  // 15% chance to detour via directie room
   if (Math.random() < 0.15 && fromY > 25) {{
-    pts.push({{ x: MEETING_ROOM.x, y: MEETING_ROOM.y, label: 'meeting' }});
+    pts.push({{ x: DIRECTIE_ROOM.x, y: DIRECTIE_ROOM.y, label: 'directie' }});
   }}
   pts.push({{ x: toX, y: toY, label: 'desk' }});
   return pts;
 }}
-
-const COFFEE_CORNER = {{ x: 14, y: 23 }};
-const MEETING_ROOM = {{ x: 81, y: 23 }};
 
 // Initialize: send everyone to their desk with possible detours
 workers.forEach(w => {{
@@ -564,8 +688,8 @@ function animate(ts) {{
 
       if (wp.label === 'coffee') {{
         s.pause = 2 + Math.random() * 3;  // 2-5s coffee break
-      }} else if (wp.label === 'meeting') {{
-        s.pause = 3 + Math.random() * 4;  // 3-7s meeting
+      }} else if (wp.label === 'directie') {{
+        s.pause = 3 + Math.random() * 4;  // 3-7s directie pause
       }} else {{
         s.pause = 1 + Math.random() * 2;  // 1-3s at desk
       }}
@@ -606,11 +730,12 @@ workers.forEach(w => {{
 
 
 def main():
-    print("🔨 Building AI Company Dashboard v3 (2D top-down office)...")
+    print("🔨 Building AI Company Dashboard v4 (2D top-down office)...")
     tasks = get_kanban_data()
     ws = get_worker_status(tasks)
     print(f"  📊 {len(tasks)} tasks, {len(ws)} workers")
-    html = generate_html(tasks, ws)
+    ct_human, ct_dec = get_categorized_tasks(tasks)
+    html = generate_html(tasks, ws, ct_human, ct_dec)
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)

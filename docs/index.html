@@ -78,7 +78,7 @@ a{color:inherit}
   background:rgba(120,53,15,.25);border:2px solid rgba(120,53,15,.4);
   color:#fbbf24;
 }
-.meeting-room{
+.directie-room{
   right:5%;top:15%;width:22%;height:16%;
   background:rgba(30,58,95,.4);border:2px solid rgba(30,58,95,.6);
   color:#60a5fa;
@@ -96,6 +96,42 @@ a{color:inherit}
 .desk::after{
   content:attr(data-label);
   font-size:8px;font-weight:600;letter-spacing:.02em;
+}
+
+/* Human Desk */
+.human-desk{
+  position:absolute;
+  width:10%;height:8%;
+  background:rgba(5,150,105,.35);border:2px solid rgba(52,211,153,.5);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#a7f3d0;
+  z-index:2;
+}
+.human-desk::after{
+  content:attr(data-label);
+  font-size:8px;font-weight:600;letter-spacing:.02em;
+}
+
+/* Floating cards */
+.floating-card{
+  position:absolute;z-index:4;
+  background:rgba(15,23,42,.85);border:1px solid var(--line);
+  border-radius:6px;padding:4px 7px;font-size:9px;color:var(--text);
+  max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  pointer-events:none;
+}
+.decision-float{border-color:rgba(96,165,250,.4);}
+
+/* Panel colors */
+.panel-human{border-color:rgba(52,211,153,.25)}
+.panel-decision{border-color:rgba(96,165,250,.25)}
+.pt-human{color:#34d399}
+.pt-decision{color:#60a5fa}
+.panel-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:22px;height:20px;border-radius:999px;padding:0 6px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  font-size:11px;margin-left:auto;
 }
 
 /* ── Door ── */
@@ -219,7 +255,7 @@ footer{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line-
 <div class="wrap">
 
 <div class="hd">
-  <div><h1>🛒 AI Company</h1><div class="sub">Volledig autonoom AI-gestuurde e-commerce · Laatste update: 17-05-2026 22:00</div></div>
+  <div><h1>🛒 AI Company</h1><div class="sub">Volledig autonoom AI-gestuurde e-commerce · Laatste update: 18-05-2026 05:02</div></div>
   <div class="live">● LIVE</div>
 </div>
 
@@ -236,8 +272,8 @@ footer{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line-
 
 <div class="stats">
   <div class="stat"><b>8</b><span>AI-werknemers</span></div>
-  <div class="stat"><b>21</b><span>Totaal taken</span></div>
-  <div class="stat"><b>18</b><span>Afgerond</span></div>
+  <div class="stat"><b>37</b><span>Totaal taken</span></div>
+  <div class="stat"><b>27</b><span>Afgerond</span></div>
   <div class="stat"><b>0</b><span>Bezig</span></div>
   <div class="stat"><b>0</b><span>In wachtrij</span></div>
   <div class="stat"><b>€5</b><span>Maandkosten</span></div>
@@ -265,8 +301,8 @@ footer{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line-
     <!-- Coffee Corner -->
     <div class="room coffee-room">☕<br>Koffiecorner</div>
 
-    <!-- Meeting Room -->
-    <div class="room meeting-room">🤝<br>Meeting<br>Room</div>
+    <!-- Directie Room -->
+    <div class="room directie-room">👔<br>Directie<br>kamer</div>
 
     <!-- Desks -->
     <div class="desk" id="desk-1" data-label="Ops"     style="left:8%;top:38%"></div>
@@ -277,6 +313,13 @@ footer{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line-
     <div class="desk" id="desk-6" data-label="Data"     style="left:22%;top:58%"></div>
     <div class="desk" id="desk-7" data-label="Design"   style="left:36%;top:58%"></div>
     <div class="desk" id="desk-8" data-label="Security" style="left:50%;top:58%"></div>
+
+    <!-- Human Desk -->
+    <div class="human-desk" data-label="🧑‍💼 Human" style="left:64%;top:58%"></div>
+
+    <!-- Floating mini cards -->
+    <div class="floating-card" style="left:64%;top:48%">Dashboard financials corrigere</div><div class="floating-card" style="left:64%;top:42%">Designer: QA live 2D office ex</div>
+    <div class="floating-card decision-float" style="right:5%;top:36%">Bol.com Partner Program — acco</div><div class="floating-card decision-float" style="right:5%;top:42%">Amazon.nl Partner Program — ac</div><div class="floating-card decision-float" style="right:5%;top:48%">Ops: implement live read-only </div>
 
     <!-- Door -->
     <div class="door">🚪 Ingang</div>
@@ -303,15 +346,35 @@ footer{text-align:center;color:var(--muted);font-size:10px;margin-top:28px;line-
   </div>
 </div>
 
-<div class="pt" style="margin-bottom:10px">📌 Kanban Board</div>
-<div class="kanban"><div class="kc-card done"><div class="kc-title">⚙️ Amazon.nl Partner Program — account + API setup</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">⚙️ Bol.com Partner Program — account + API setup</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO-artikel 1: Beste mini pc 2026 — koopgids</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO-artikel 2: Mini pc voor home lab — gids</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO-artikel 3: Mini pc vs desktop — vergelijking</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">⚙️ Google Search Console + Analytics setup</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">💻 Prijs-scraper — Bol.com + Amazon.nl</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">💻 Email nieuwsbrief template + lead capture</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">💻 AI Company Dashboard bouwen</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card blocked"><div class="kc-title">⚙️ Bol.com Partner Program — account + affiliate links</div><div class="kc-meta">worker-ops · blocked</div></div><div class="kc-card blocked"><div class="kc-title">⚙️ Amazon.nl Partner Program — account + affiliate links</div><div class="kc-meta">worker-ops · blocked</div></div><div class="kc-card done"><div class="kc-title">💻 Social content machine — automatische posts genereren</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">💻 Deal-alert systeem — prijsdaling detectie + notificatie</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO blog — 10 artikelen voor organische traffic</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Productverrijking — foto's, video's, reviews</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Onderzoek: goedkopere VPS + domein</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Forecast input: traffic + SEO growth assumptions</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Forecast input: affiliate conversion + commission assumptions</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">📊 Forecast model: 12-month P&L scenarios</div><div class="kc-meta">worker-data · done</div></div><div class="kc-card done"><div class="kc-title">📋 Board memo: management recommendation from forecast</div><div class="kc-meta">worker-pm · done</div></div><div class="kc-card running"><div class="kc-title">💻 Dashboard financials corrigeren naar echte Hetzner prijs</div><div class="kc-meta">worker-developer · running</div></div></div>
+<div class="two-col">
+  <div class="panel panel-human">
+    <div class="pt pt-human">🧑‍💼 Human in the Loop <span class="panel-badge">2</span></div>
+    <div class="act-item"><span class="act-emoji">🧑‍💼</span><span class="act-text"><b>t_118360ca</b> — Dashboard financials corrigeren naar echte Hetzner prijs</span><span class="act-time">blocked</span></div><div class="act-item"><span class="act-emoji">🧑‍💼</span><span class="act-text"><b>t_6b7bdc47</b> — Designer: QA live 2D office experience on VPS</span><span class="act-time">todo</span></div>
+  </div>
+  <div class="panel panel-decision">
+    <div class="pt pt-decision">👔 Decision / Approval Board <span class="panel-badge">8</span></div>
+    <div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_d7460ea3</b> — Bol.com Partner Program — account + affiliate links</span><span class="act-time">blocked</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_c094832b</b> — Amazon.nl Partner Program — account + affiliate links</span><span class="act-time">blocked</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_790800a3</b> — Ops: implement live read-only team dashboard on VPS</span><span class="act-time">blocked</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_d4f06ed6</b> — Security: review public live dashboard before Jasper signoff</span><span class="act-time">todo</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_be3a5a3d</b> — PM: director go-live summary for live AI team dashboard</span><span class="act-time">todo</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_dcd80061</b> — Developer: deploy 2D office frontend to live VPS view</span><span class="act-time">todo</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_ae738c3f</b> — Director input needed: brand name, domain, and live data transparency</span><span class="act-time">blocked</span></div><div class="act-item"><span class="act-emoji">👔</span><span class="act-text"><b>t_44b2afbd</b> — Dashboard: human-in-loop desk + director approval board</span><span class="act-time">blocked</span></div>
+  </div>
+</div>
 
-<footer>AI Company Dashboard v3 · 2D Top-Down Office · Laatste build: 17-05-2026 22:00 · <a href="https://github.com/pehur00/ecommerce-company" style="color:var(--brand2)">GitHub</a></footer>
+<div class="pt" style="margin-bottom:10px">📌 Kanban Board</div>
+<div class="kanban"><div class="kc-card done"><div class="kc-title">⚙️ Amazon.nl Partner Program — account + API setup</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">⚙️ Bol.com Partner Program — account + API setup</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO-artikel 1: Beste mini pc 2026 — koopgids</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO-artikel 2: Mini pc voor home lab — gids</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO-artikel 3: Mini pc vs desktop — vergelijking</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">⚙️ Google Search Console + Analytics setup</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">💻 Prijs-scraper — Bol.com + Amazon.nl</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">💻 Email nieuwsbrief template + lead capture</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">💻 AI Company Dashboard bouwen</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card blocked"><div class="kc-title">⚙️ Bol.com Partner Program — account + affiliate links</div><div class="kc-meta">worker-ops · blocked</div></div><div class="kc-card blocked"><div class="kc-title">⚙️ Amazon.nl Partner Program — account + affiliate links</div><div class="kc-meta">worker-ops · blocked</div></div><div class="kc-card done"><div class="kc-title">💻 Social content machine — automatische posts genereren</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">💻 Deal-alert systeem — prijsdaling detectie + notificatie</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">🔬 SEO blog — 10 artikelen voor organische traffic</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Productverrijking — foto&#x27;s, video&#x27;s, reviews</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Onderzoek: goedkopere VPS + domein</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Forecast input: traffic + SEO growth assumptions</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Forecast input: affiliate conversion + commission assumptions</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">📊 Forecast model: 12-month P&amp;L scenarios</div><div class="kc-meta">worker-data · done</div></div><div class="kc-card done"><div class="kc-title">📋 Board memo: management recommendation from forecast</div><div class="kc-meta">worker-pm · done</div></div><div class="kc-card blocked"><div class="kc-title">💻 Dashboard financials corrigeren naar echte Hetzner prijs</div><div class="kc-meta">worker-developer · blocked</div></div><div class="kc-card done"><div class="kc-title">⚙️ Ops: provision Hetzner ecommerce-prod-01</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">🔬 Concept: naam en publieke positionering AI e-commerce bedrijf</div><div class="kc-meta">worker-researcher · done</div></div><div class="kc-card done"><div class="kc-title">💻 Architectuur: readonly live sync van kanban naar website</div><div class="kc-meta">worker-developer · done</div></div><div class="kc-card done"><div class="kc-title">⚙️ Ops: VPS inrichting voor live readonly team dashboard</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">📋 PM memo: live autonome team website voorstel</div><div class="kc-meta">worker-pm · done</div></div><div class="kc-card done"><div class="kc-title">🎨 UX: live AI-team dashboard en e-commerce bedrijfservaring</div><div class="kc-meta">worker-designer · done</div></div><div class="kc-card blocked"><div class="kc-title">⚙️ Ops: implement live read-only team dashboard on VPS</div><div class="kc-meta">worker-ops · blocked</div></div><div class="kc-card todo"><div class="kc-title">🛡️ Security: review public live dashboard before Jasper signoff</div><div class="kc-meta">security · todo</div></div><div class="kc-card todo"><div class="kc-title">📋 PM: director go-live summary for live AI team dashboard</div><div class="kc-meta">worker-pm · todo</div></div><div class="kc-card todo"><div class="kc-title">💻 Developer: deploy 2D office frontend to live VPS view</div><div class="kc-meta">worker-developer · todo</div></div><div class="kc-card todo"><div class="kc-title">🎨 Designer: QA live 2D office experience on VPS</div><div class="kc-meta">worker-designer · todo</div></div><div class="kc-card done"><div class="kc-title">📋 Board meeting: live 2D office team collaboration retrospective</div><div class="kc-meta">worker-pm · done</div></div><div class="kc-card done"><div class="kc-title">⚙️ Ops recovery: deployment contract for live 2D office VPS</div><div class="kc-meta">worker-ops · done</div></div><div class="kc-card done"><div class="kc-title">🛡️ Security: sanitizer contract for public live kanban JSON</div><div class="kc-meta">security · done</div></div><div class="kc-card blocked"><div class="kc-title">📋 Director input needed: brand name, domain, and live data transparency</div><div class="kc-meta">worker-pm · blocked</div></div><div class="kc-card blocked"><div class="kc-title">💻 Dashboard: human-in-loop desk + director approval board</div><div class="kc-meta">worker-developer · blocked</div></div></div>
+
+<footer>AI Company Dashboard v4 · 2D Top-Down Office · Laatste build: 18-05-2026 05:02 · <a href="https://github.com/pehur00/ecommerce-company" style="color:var(--brand2)">GitHub</a></footer>
 </div>
 
 <script>
-const workers = [{"id": "worker-ops", "name": "Ops", "emoji": "\u2699\ufe0f", "color": "#34d399", "role": "Operations & Infrastructure", "deskX": 8, "deskY": 38, "speed": 1.8, "status": "done", "task": "Amazon.nl Partner Program \u2014 account + API setup"}, {"id": "worker-researcher", "name": "Research", "emoji": "\ud83d\udd2c", "color": "#a78bfa", "role": "Research & Content", "deskX": 22, "deskY": 38, "speed": 1.5, "status": "done", "task": "SEO-artikel 1: Beste mini pc 2026 \u2014 koopgids"}, {"id": "worker-developer", "name": "Dev", "emoji": "\ud83d\udcbb", "color": "#60a5fa", "role": "Software Development", "deskX": 36, "deskY": 38, "speed": 2.0, "status": "busy", "task": "Dashboard financials corrigeren naar echte Hetzner prijs"}, {"id": "worker-reviewer", "name": "Review", "emoji": "\ud83d\udd0d", "color": "#fbbf24", "role": "Quality Assurance", "deskX": 50, "deskY": 38, "speed": 1.6, "status": "idle", "task": "Wacht op nieuwe opdracht"}, {"id": "worker-pm", "name": "PM", "emoji": "\ud83d\udccb", "color": "#fb923c", "role": "Project Management", "deskX": 8, "deskY": 58, "speed": 1.9, "status": "done", "task": "Board memo: management recommendation from forecast"}, {"id": "worker-data", "name": "Data", "emoji": "\ud83d\udcca", "color": "#f87171", "role": "Data Engineering", "deskX": 22, "deskY": 58, "speed": 1.3, "status": "done", "task": "Forecast model: 12-month P&L scenarios"}, {"id": "worker-designer", "name": "Design", "emoji": "\ud83c\udfa8", "color": "#f472b6", "role": "UI/UX Design", "deskX": 36, "deskY": 58, "speed": 2.1, "status": "idle", "task": "Wacht op nieuwe opdracht"}, {"id": "security", "name": "Security", "emoji": "\ud83d\udee1\ufe0f", "color": "#94a3b8", "role": "Security & Compliance", "deskX": 50, "deskY": 58, "speed": 1.1, "status": "idle", "task": "Wacht op nieuwe opdracht"}];
+const workers = [{"id": "worker-ops", "name": "Ops", "emoji": "\u2699\ufe0f", "color": "#34d399", "role": "Operations & Infrastructure", "deskX": 8, "deskY": 38, "speed": 1.8, "status": "done", "task": "Amazon.nl Partner Program \u2014 account + API setup"}, {"id": "worker-researcher", "name": "Research", "emoji": "\ud83d\udd2c", "color": "#a78bfa", "role": "Research & Content", "deskX": 22, "deskY": 38, "speed": 1.5, "status": "done", "task": "SEO-artikel 1: Beste mini pc 2026 \u2014 koopgids"}, {"id": "worker-developer", "name": "Dev", "emoji": "\ud83d\udcbb", "color": "#60a5fa", "role": "Software Development", "deskX": 36, "deskY": 38, "speed": 2.0, "status": "done", "task": "Prijs-scraper \u2014 Bol.com + Amazon.nl"}, {"id": "worker-reviewer", "name": "Review", "emoji": "\ud83d\udd0d", "color": "#fbbf24", "role": "Quality Assurance", "deskX": 50, "deskY": 38, "speed": 1.6, "status": "idle", "task": "Wacht op nieuwe opdracht"}, {"id": "worker-pm", "name": "PM", "emoji": "\ud83d\udccb", "color": "#fb923c", "role": "Project Management", "deskX": 8, "deskY": 58, "speed": 1.9, "status": "done", "task": "Board memo: management recommendation from forecast"}, {"id": "worker-data", "name": "Data", "emoji": "\ud83d\udcca", "color": "#f87171", "role": "Data Engineering", "deskX": 22, "deskY": 58, "speed": 1.3, "status": "done", "task": "Forecast model: 12-month P&L scenarios"}, {"id": "worker-designer", "name": "Design", "emoji": "\ud83c\udfa8", "color": "#f472b6", "role": "UI/UX Design", "deskX": 36, "deskY": 58, "speed": 2.1, "status": "done", "task": "UX: live AI-team dashboard en e-commerce bedrijfservaring"}, {"id": "security", "name": "Security", "emoji": "\ud83d\udee1\ufe0f", "color": "#94a3b8", "role": "Security & Compliance", "deskX": 50, "deskY": 58, "speed": 1.1, "status": "done", "task": "Security: sanitizer contract for public live kanban JSON"}];
 const office = document.getElementById('office');
+const COFFEE_CORNER = { x: 14, y: 23 };
+const MEETING_ROOM = { x: 81, y: 23 };
+const DIRECTIE_ROOM = { x: 72, y: 23 };
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[ch]));
+}
 
 // Create worker DOM
 workers.forEach(w => {
@@ -327,7 +390,7 @@ workers.forEach(w => {
       <div class="char-dir"></div>
     </div>
     <div class="sdot ${w.status}"></div>
-    <div class="speech">${w.task.length > 45 ? w.task.substring(0,42) + '...' : w.task}</div>
+    <div class="speech">${escapeHtml(w.task.length > 45 ? w.task.substring(0,42) + '...' : w.task)}</div>
   `;
   office.appendChild(el);
 });
@@ -358,16 +421,13 @@ function getWaypoints(fromX, fromY, toX, toY, worker) {
   if (Math.random() < 0.3 && fromY > 25) {
     pts.push({ x: COFFEE_CORNER.x, y: COFFEE_CORNER.y, label: 'coffee' });
   }
-  // 15% chance to detour via meeting room
+  // 15% chance to detour via directie room
   if (Math.random() < 0.15 && fromY > 25) {
-    pts.push({ x: MEETING_ROOM.x, y: MEETING_ROOM.y, label: 'meeting' });
+    pts.push({ x: DIRECTIE_ROOM.x, y: DIRECTIE_ROOM.y, label: 'directie' });
   }
   pts.push({ x: toX, y: toY, label: 'desk' });
   return pts;
 }
-
-const COFFEE_CORNER = { x: 14, y: 23 };
-const MEETING_ROOM = { x: 81, y: 23 };
 
 // Initialize: send everyone to their desk with possible detours
 workers.forEach(w => {
@@ -411,8 +471,8 @@ function animate(ts) {
 
       if (wp.label === 'coffee') {
         s.pause = 2 + Math.random() * 3;  // 2-5s coffee break
-      } else if (wp.label === 'meeting') {
-        s.pause = 3 + Math.random() * 4;  // 3-7s meeting
+      } else if (wp.label === 'directie') {
+        s.pause = 3 + Math.random() * 4;  // 3-7s directie pause
       } else {
         s.pause = 1 + Math.random() * 2;  // 1-3s at desk
       }
