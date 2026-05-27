@@ -1,0 +1,727 @@
+{
+  "_meta": {
+    "generated_at": "2026-05-18T18:12:10.409927+00:00",
+    "source": "ecommerce",
+    "version": "1",
+    "tasks_total": 52,
+    "tasks_by_status": {
+      "done": 39,
+      "blocked": 12,
+      "running": 1
+    },
+    "bottleneck_worker": "worker-developer",
+    "stale": false
+  },
+  "workers": [
+    {
+      "id": "worker-ops",
+      "name": "Ops",
+      "active_tasks": 0,
+      "completed_tasks": 9,
+      "total_tasks": 13,
+      "workload_score": 12.5,
+      "load_label": "overloaded",
+      "load_label_nl": "overbelast",
+      "status_counts": {
+        "running": 0,
+        "ready": 0,
+        "blocked": 4,
+        "done": 9,
+        "recent_done": 9
+      }
+    },
+    {
+      "id": "worker-researcher",
+      "name": "Researcher",
+      "active_tasks": 0,
+      "completed_tasks": 10,
+      "total_tasks": 10,
+      "workload_score": 5.0,
+      "load_label": "busy",
+      "load_label_nl": "druk",
+      "status_counts": {
+        "running": 0,
+        "ready": 0,
+        "blocked": 0,
+        "done": 10,
+        "recent_done": 10
+      }
+    },
+    {
+      "id": "worker-developer",
+      "name": "Developer",
+      "active_tasks": 1,
+      "completed_tasks": 10,
+      "total_tasks": 16,
+      "workload_score": 18.0,
+      "load_label": "overloaded",
+      "load_label_nl": "overbelast",
+      "status_counts": {
+        "running": 1,
+        "ready": 0,
+        "blocked": 5,
+        "done": 10,
+        "recent_done": 10
+      }
+    },
+    {
+      "id": "worker-data",
+      "name": "Data",
+      "active_tasks": 0,
+      "completed_tasks": 1,
+      "total_tasks": 1,
+      "workload_score": 0.5,
+      "load_label": "normal",
+      "load_label_nl": "normaal",
+      "status_counts": {
+        "running": 0,
+        "ready": 0,
+        "blocked": 0,
+        "done": 1,
+        "recent_done": 1
+      }
+    },
+    {
+      "id": "worker-pm",
+      "name": "Pm",
+      "active_tasks": 0,
+      "completed_tasks": 5,
+      "total_tasks": 7,
+      "workload_score": 6.5,
+      "load_label": "overloaded",
+      "load_label_nl": "overbelast",
+      "status_counts": {
+        "running": 0,
+        "ready": 0,
+        "blocked": 2,
+        "done": 5,
+        "recent_done": 5
+      }
+    },
+    {
+      "id": "worker-designer",
+      "name": "Designer",
+      "active_tasks": 0,
+      "completed_tasks": 2,
+      "total_tasks": 2,
+      "workload_score": 1.0,
+      "load_label": "normal",
+      "load_label_nl": "normaal",
+      "status_counts": {
+        "running": 0,
+        "ready": 0,
+        "blocked": 0,
+        "done": 2,
+        "recent_done": 2
+      }
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "active_tasks": 0,
+      "completed_tasks": 2,
+      "total_tasks": 3,
+      "workload_score": 3.0,
+      "load_label": "normal",
+      "load_label_nl": "normaal",
+      "status_counts": {
+        "running": 0,
+        "ready": 0,
+        "blocked": 1,
+        "done": 2,
+        "recent_done": 2
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t_e5b519d1",
+      "title": "Amazon.nl Partner Program — account + API setup",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041942,
+      "started_at": 1779041958,
+      "completed_at": 1779042435
+    },
+    {
+      "id": "t_9772970d",
+      "title": "Bol.com Partner Program — account + API setup",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041942,
+      "started_at": 1779041958,
+      "completed_at": 1779042288
+    },
+    {
+      "id": "t_0a93bba1",
+      "title": "SEO-artikel 1: Beste mini pc 2026 — koopgids",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041942,
+      "started_at": 1779041958,
+      "completed_at": 1779042408
+    },
+    {
+      "id": "t_fa5c0d9c",
+      "title": "SEO-artikel 2: Mini pc voor home lab — gids",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041943,
+      "started_at": 1779041958,
+      "completed_at": 1779042526
+    },
+    {
+      "id": "t_2270b534",
+      "title": "SEO-artikel 3: Mini pc vs desktop — vergelijking",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041943,
+      "started_at": 1779041958,
+      "completed_at": 1779042162
+    },
+    {
+      "id": "t_4eca7d90",
+      "title": "Google Search Console + Analytics setup",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041943,
+      "started_at": 1779042000,
+      "completed_at": 1779042426
+    },
+    {
+      "id": "t_94405275",
+      "title": "Prijs-scraper — Bol.com + Amazon.nl",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041944,
+      "started_at": 1779042000,
+      "completed_at": 1779042398
+    },
+    {
+      "id": "t_ba907e3a",
+      "title": "Email nieuwsbrief template + lead capture",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779041944,
+      "started_at": 1779042000,
+      "completed_at": 1779042174
+    },
+    {
+      "id": "t_fe2ce288",
+      "title": "AI Company Dashboard bouwen",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779047017,
+      "started_at": 1779047047,
+      "completed_at": 1779049097
+    },
+    {
+      "id": "t_d7460ea3",
+      "title": "Bol.com Partner Program — account + affiliate links",
+      "assignee": "worker-ops",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779049048,
+      "started_at": 1779049062,
+      "completed_at": null
+    },
+    {
+      "id": "t_c094832b",
+      "title": "Amazon.nl Partner Program — account + affiliate links",
+      "assignee": "worker-ops",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779049048,
+      "started_at": 1779049062,
+      "completed_at": null
+    },
+    {
+      "id": "t_b0810b7c",
+      "title": "Social content machine — automatische posts genereren",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779049049,
+      "started_at": 1779049062,
+      "completed_at": 1779049192
+    },
+    {
+      "id": "t_dd95f2e3",
+      "title": "Deal-alert systeem — prijsdaling detectie + notificatie",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779049049,
+      "started_at": 1779049062,
+      "completed_at": 1779049498
+    },
+    {
+      "id": "t_367f1a09",
+      "title": "SEO blog — 10 artikelen voor organische traffic",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779049049,
+      "started_at": 1779049062,
+      "completed_at": 1779049587
+    },
+    {
+      "id": "t_c14ff4a3",
+      "title": "Productverrijking — foto's, video's, reviews",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779049049,
+      "started_at": 1779049062,
+      "completed_at": 1779049766
+    },
+    {
+      "id": "t_73f60759",
+      "title": "Onderzoek: goedkopere [REDACTED] + domein",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779051295,
+      "started_at": 1779051313,
+      "completed_at": 1779051752
+    },
+    {
+      "id": "t_ce4b21ab",
+      "title": "Forecast input: traffic + SEO growth assumptions",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779054360,
+      "started_at": 1779054368,
+      "completed_at": 1779054424
+    },
+    {
+      "id": "t_f38735fb",
+      "title": "Forecast input: affiliate conversion + commission assumptions",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779054360,
+      "started_at": 1779054368,
+      "completed_at": 1779054444
+    },
+    {
+      "id": "t_1bae0838",
+      "title": "Forecast model: 12-month P&L scenarios",
+      "assignee": "worker-data",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779054360,
+      "started_at": 1779054368,
+      "completed_at": 1779054478
+    },
+    {
+      "id": "t_d6ca1330",
+      "title": "Board memo: management recommendation from forecast",
+      "assignee": "worker-pm",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779054361,
+      "started_at": 1779054368,
+      "completed_at": 1779054439
+    },
+    {
+      "id": "t_118360ca",
+      "title": "Dashboard financials corrigeren naar echte [REDACTED] prijs",
+      "assignee": "worker-developer",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779055181,
+      "started_at": 1779055187,
+      "completed_at": null
+    },
+    {
+      "id": "t_c082141b",
+      "title": "Ops: provision [REDACTED] [REDACTED]",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779055903,
+      "started_at": 1779055911,
+      "completed_at": 1779056336
+    },
+    {
+      "id": "t_8a2722ab",
+      "title": "Concept: naam en publieke positionering AI e-commerce bedrijf",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779056070,
+      "started_at": 1779056080,
+      "completed_at": 1779056394
+    },
+    {
+      "id": "t_3c469d43",
+      "title": "Architectuur: readonly live sync van kanban naar website",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779056070,
+      "started_at": 1779056080,
+      "completed_at": 1779057046
+    },
+    {
+      "id": "t_99d6bb98",
+      "title": "Ops: [REDACTED] inrichting voor live readonly team dashboard",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779056070,
+      "started_at": 1779056080,
+      "completed_at": 1779056171
+    },
+    {
+      "id": "t_67c9b94a",
+      "title": "PM memo: live autonome team website voorstel",
+      "assignee": "worker-pm",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779056070,
+      "started_at": 1779056080,
+      "completed_at": 1779056108
+    },
+    {
+      "id": "t_adf1dcd3",
+      "title": "UX: live AI-team dashboard en e-commerce bedrijfservaring",
+      "assignee": "worker-designer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779057171,
+      "started_at": 1779057177,
+      "completed_at": 1779057286
+    },
+    {
+      "id": "t_790800a3",
+      "title": "Ops: implement live read-only team dashboard on [REDACTED]",
+      "assignee": "worker-ops",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779059048,
+      "started_at": 1779059055,
+      "completed_at": null
+    },
+    {
+      "id": "t_d4f06ed6",
+      "title": "Security: review public live dashboard before Jasper signoff",
+      "assignee": "security",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779059048,
+      "started_at": 1779082620,
+      "completed_at": null
+    },
+    {
+      "id": "t_be3a5a3d",
+      "title": "PM: director go-live summary for live AI team dashboard",
+      "assignee": "worker-pm",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779059049,
+      "started_at": 1779127597,
+      "completed_at": 1779127783
+    },
+    {
+      "id": "t_dcd80061",
+      "title": "Developer: deploy 2D office frontend to live [REDACTED] view",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779059840,
+      "started_at": 1779081959,
+      "completed_at": 1779082379
+    },
+    {
+      "id": "t_6b7bdc47",
+      "title": "Designer: QA live 2D office experience on [REDACTED]",
+      "assignee": "worker-designer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779059841,
+      "started_at": 1779082380,
+      "completed_at": 1779082566
+    },
+    {
+      "id": "t_f6922aa4",
+      "title": "Board meeting: live 2D office team collaboration retrospective",
+      "assignee": "worker-pm",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779060075,
+      "started_at": 1779060085,
+      "completed_at": 1779060401
+    },
+    {
+      "id": "t_0f6a516f",
+      "title": "Ops recovery: deployment contract for live 2D office [REDACTED]",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779060075,
+      "started_at": 1779060085,
+      "completed_at": 1779060315
+    },
+    {
+      "id": "t_4c16dbc1",
+      "title": "Security: sanitizer contract for public live kanban JSON",
+      "assignee": "security",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779060075,
+      "started_at": 1779060085,
+      "completed_at": 1779060155
+    },
+    {
+      "id": "t_ae738c3f",
+      "title": "Director input needed: brand name, domain, and live data transparency",
+      "assignee": "worker-pm",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779060387,
+      "started_at": 1779060446,
+      "completed_at": null
+    },
+    {
+      "id": "t_44b2afbd",
+      "title": "Dashboard: human-in-loop desk + director approval board",
+      "assignee": "worker-developer",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779078179,
+      "started_at": 1779078179,
+      "completed_at": null
+    },
+    {
+      "id": "t_ed303e85",
+      "title": "Ops: [REDACTED] bootstrap — nginx, firewall, deploy user",
+      "assignee": "worker-ops",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779082094,
+      "started_at": 1779082140,
+      "completed_at": null
+    },
+    {
+      "id": "t_406aeb94",
+      "title": "LIVE URL: dashboard moet draaien op [REDACTED] [REDACTED], niet alleen GitHub Pages",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779082234,
+      "started_at": 1779082260,
+      "completed_at": 1779082651
+    },
+    {
+      "id": "t_40624e0f",
+      "title": "URGENT: deploy v4 2D office frontend naar [REDACTED] — huidige [REDACTED] toont geen kantoor",
+      "assignee": "worker-developer",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779083142,
+      "started_at": 1779083161,
+      "completed_at": null
+    },
+    {
+      "id": "t_00bc737b",
+      "title": "ADVIES: [REDACTED] deploy blokkeert door security scanner — directeur beslissing nodig",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779086965,
+      "started_at": 1779087006,
+      "completed_at": 1779087090
+    },
+    {
+      "id": "t_bf744e2a",
+      "title": "FIX: 6 security findings voor go-live dashboard",
+      "assignee": "worker-developer",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779095977,
+      "started_at": 1779096020,
+      "completed_at": null
+    },
+    {
+      "id": "t_7d63e61b",
+      "title": "DEPLOY: v4 2D office frontend naar [REDACTED]",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779096012,
+      "started_at": 1779096020,
+      "completed_at": 1779096119
+    },
+    {
+      "id": "t_4a056954",
+      "title": "ADVIES: domeinnaam + data pipeline architectuur voor directeur",
+      "assignee": "worker-ops",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779108981,
+      "started_at": 1779108999,
+      "completed_at": 1779109718
+    },
+    {
+      "id": "t_5925dc1c",
+      "title": "Tekstuele statusupdate: wie doet wat, waar is iedereen mee bezig",
+      "assignee": "worker-pm",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779109040,
+      "started_at": 1779109059,
+      "completed_at": null
+    },
+    {
+      "id": "t_023fcd6d",
+      "title": "FIX: sanitizer — verwijder result/tenant/created_by/workspace_kind keys",
+      "assignee": "worker-developer",
+      "status": "blocked",
+      "priority": 0,
+      "created_at": 1779110827,
+      "started_at": 1779110861,
+      "completed_at": null
+    },
+    {
+      "id": "t_2a53f4d4",
+      "title": "FIX: sanitizer — title redaction + kanban.json endpoint",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779110829,
+      "started_at": 1779110861,
+      "completed_at": 1779111288
+    },
+    {
+      "id": "t_cd2d1ce5",
+      "title": "PM: tekstuele statusupdate — wie doet wat",
+      "assignee": "worker-pm",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779110830,
+      "started_at": 1779110861,
+      "completed_at": 1779110916
+    },
+    {
+      "id": "t_ece713e9",
+      "title": "ADVIES: goedkoopste domeinnaam optie voor AI e-commerce team",
+      "assignee": "worker-researcher",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779124344,
+      "started_at": 1779124394,
+      "completed_at": 1779127107
+    },
+    {
+      "id": "t_b82e7d73",
+      "title": "FIX: sanitizer — verwijder result/tenant/created_by/workspace_kind keys (F1-F4)",
+      "assignee": "worker-developer",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779125601,
+      "started_at": 1779125660,
+      "completed_at": 1779127002
+    },
+    {
+      "id": "t_29bf9e94",
+      "title": "Security: herreview na F1-F4 fix — go-live signoff",
+      "assignee": "security",
+      "status": "done",
+      "priority": 0,
+      "created_at": 1779125636,
+      "started_at": 1779127052,
+      "completed_at": 1779127541
+    },
+    {
+      "id": "t_f19c9280",
+      "title": "VERIFY + FIX: human desk + directie kamer in 2D office dashboard",
+      "assignee": "worker-developer",
+      "status": "running",
+      "priority": 0,
+      "created_at": 1779125691,
+      "started_at": 1779125704,
+      "completed_at": null
+    }
+  ],
+  "activity": [
+    {
+      "worker": "worker-pm",
+      "task_title": "PM: director go-live summary for live AI team dashboard",
+      "status": "done",
+      "timestamp": 1779127783
+    },
+    {
+      "worker": "security",
+      "task_title": "Security: herreview na F1-F4 fix — go-live signoff",
+      "status": "done",
+      "timestamp": 1779127541
+    },
+    {
+      "worker": "worker-researcher",
+      "task_title": "ADVIES: goedkoopste domeinnaam optie voor AI e-commerce team",
+      "status": "done",
+      "timestamp": 1779127107
+    },
+    {
+      "worker": "worker-developer",
+      "task_title": "FIX: sanitizer — verwijder result/tenant/created_by/workspace_kind keys (F1-F4)",
+      "status": "done",
+      "timestamp": 1779127002
+    },
+    {
+      "worker": "worker-developer",
+      "task_title": "FIX: sanitizer — title redaction + kanban.json endpoint",
+      "status": "done",
+      "timestamp": 1779111288
+    },
+    {
+      "worker": "worker-pm",
+      "task_title": "PM: tekstuele statusupdate — wie doet wat",
+      "status": "done",
+      "timestamp": 1779110916
+    },
+    {
+      "worker": "worker-ops",
+      "task_title": "ADVIES: domeinnaam + data pipeline architectuur voor directeur",
+      "status": "done",
+      "timestamp": 1779109718
+    },
+    {
+      "worker": "worker-developer",
+      "task_title": "DEPLOY: v4 2D office frontend naar [REDACTED]",
+      "status": "done",
+      "timestamp": 1779096119
+    },
+    {
+      "worker": "worker-ops",
+      "task_title": "ADVIES: [REDACTED] deploy blokkeert door security scanner — directeur beslissing nodig",
+      "status": "done",
+      "timestamp": 1779087090
+    },
+    {
+      "worker": "worker-ops",
+      "task_title": "LIVE URL: dashboard moet draaien op [REDACTED] [REDACTED], niet alleen GitHub Pages",
+      "status": "done",
+      "timestamp": 1779082651
+    }
+  ],
+  "financials": {
+    "monthly_expenses": 0.0,
+    "monthly_revenue": 0.0,
+    "profit": 0.0,
+    "currency": "EUR",
+    "items": []
+  }
+}
